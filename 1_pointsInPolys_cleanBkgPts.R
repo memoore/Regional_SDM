@@ -114,7 +114,7 @@ SQLQuery <- paste0("SELECT proj4string p FROM lkpCRS WHERE table_name = '", nm_b
 proj4 <- dbGetQuery(dbEV, SQLQuery)$p
 # shapef <- st_read(nm_allflowlines)
 names(shapef) <- tolower(names(shapef))
-shapef <- st_sf(shapef[c("comid", "huc12")], geometry = st_as_sfc(shapef$wkt), crs = proj4)
+shapef <- st_sf(shapef[c("comid", "huc12","wacomid")], geometry=st_as_sfc(shapef$wkt), crs=proj4)
 # testcatchments <- shapef@data
 shapef$huc12 <- str_pad(shapef$huc12, 12, pad=0)
 
@@ -137,9 +137,9 @@ if (is.null(huc_level)) {
   } else if(length(unique(substr(presHUCs,1,4)))==1){
     huc_level <- 4  
   } else if(length(unique(substr(presHUCs,1,2)))==1){
-    huc_level <- 2
+    huc_level <- 2 
   } else {
-    huc_level <- 2
+    huc_level <- 4 # changed from 2 to try to narrow up the prediction area
   }
   fn_args$huc_level <- huc_level
   save(fn_args, file = paste0(loc_model, "/" , model_species, "/runSDM_paths.Rdata"))
